@@ -1,6 +1,12 @@
+import os
 import requests
-#API KEY
-API_KEY = "adef718bdb6c4c51a2081309252702"  
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
+# Get API Key from .env file
+API_KEY = os.getenv("API_KEY")
 BASE_URL = "http://api.weatherapi.com/v1/current.json"
 
 def get_weather(city):
@@ -22,7 +28,7 @@ def get_weather(city):
 
 # User input
 city = input("Enter name of your city: ")
-#Get weather for entered location
+# Get weather for entered location
 weather_data = get_weather(city)
 
 # Display results
@@ -31,4 +37,3 @@ if isinstance(weather_data, dict):
         print(f"{key}: {value}")
 else:
     print(weather_data)
-
