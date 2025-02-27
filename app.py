@@ -11,10 +11,11 @@ BASE_URL = "http://api.weatherapi.com/v1/current.json"
 
 def get_weather(city):
     params = {"key": API_KEY, "q": city, "aqi": "no"}
-    response = requests.get(BASE_URL, params=params)
-    data = response.json()
-    
-    if response.status_code == 200:
+    try:
+        response = requests.get(BASE_URL, params=params)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+        data = response.json()
+        
         weather = {
             "City": data["location"]["name"],
             "Country": data["location"]["country"],
@@ -23,8 +24,10 @@ def get_weather(city):
             "Condition": data["current"]["condition"]["text"]
         }
         return weather
-    else:
-        return f"Error: {data.get('error', {}).get('message', 'Unknown error')}"
+    except requests.exceptions.RequestException as e:
+        return f"Error: {str(e)}"
+    except KeyError:
+        return "Error: Unexpected response format"
 
 # User input
 city = input("Enter name of your city: ")
